@@ -32,8 +32,14 @@ function! clever_f#find_with(map)
         endif
         try
             if g:clever_f_show_prompt | echon "clever-f: " | endif
-            let s:previous_char[mode] = getchar()
-            let s:previous_map[mode] = a:map
+            " <CR> means repeat previous search.
+            let c = getchar()
+            if c == 13
+                let back = a:map =~# '\u'
+            else
+                let s:previous_char[mode] = c
+                let s:previous_map[mode] = a:map
+            endif
             let s:first_move[mode] = 1
 
             if g:clever_f_show_prompt | redraw! | endif
