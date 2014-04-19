@@ -81,7 +81,7 @@ function! clever_f#repeat(back)
         let cmd = s:move_cmd_for_visualmode(pmap, pchar)
     else
         let inclusive = mode ==# 'no' && pmap =~# '\l'
-        let cmd = printf("%s:\<C-u>call clever_f#find(%s, %s)\<CR>",
+        let cmd = printf("%s:\<C-u>if clever_f#find(%s, %s) | echoerr 'no match' | endif\<CR>",
                     \    inclusive ? 'v' : '',
                     \    string(pmap), pchar)
     endif
@@ -95,6 +95,9 @@ function! clever_f#find(map, char)
         let mode = mode(1)
         let s:previous_pos[mode] = next_pos
         call cursor(next_pos[0], next_pos[1])
+        return 0
+    else
+        return 1
     endif
 endfunction
 
